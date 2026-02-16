@@ -86,6 +86,7 @@ import { getSynk } from 'svelte-synk';
 
 const synk = getSynk();
 
+// Next steps:
 // 1. Create synced stores by key
 // 2. Register leader-only task handlers
 // 3. Submit leader tasks from any tab
@@ -116,6 +117,16 @@ const amountStore = synk.createStore('amount', 0, {
 });
 ```
 
+```ts
+// With Zod 4 (if available)
+import { z } from 'zod';
+
+const amountSchema = z.number();
+const amountStore = synk.createStore('amount', 0, {
+    validate: (value) => amountSchema.safeParse(value)
+});
+```
+
 ## Store Metadata
 
 ```ts
@@ -142,7 +153,7 @@ synk.registerLeaderTask('refresh-token', async ({ key, payload, signal }) => {
 ```
 
 ```ts
-// Run immediately on leader
+// Run immediately on leader (with an optional payload)
 const runResult = await synk.runLeaderTask('refresh-token', 'auth:global', {
     reason: '401'
 });
@@ -150,12 +161,12 @@ const runResult = await synk.runLeaderTask('refresh-token', 'auth:global', {
 ```
 
 ```ts
-// Schedule timeout task
+// Schedule timeout task (with an optional payload)
 await synk.scheduleLeaderTimeoutTask('refresh-token', 'auth:timeout', 5_000, {
     reason: 'proactive'
 });
 
-// Schedule interval task
+// Schedule interval task (with an optional payload)
 await synk.scheduleLeaderIntervalTask('refresh-token', 'auth:interval', 60_000, {
     reason: 'heartbeat'
 });
@@ -163,9 +174,11 @@ await synk.scheduleLeaderIntervalTask('refresh-token', 'auth:interval', 60_000, 
 
 ```ts
 // Optional listeners
-const offFailed = synk.onLeaderTaskFailed((event) => console.error(event));
-const offSkipped = synk.onLeaderTaskSkipped((event) => console.warn(event));
-const offLeader = synk.onLeaderStatusChanged((event) => console.log(event.leaderTabId));
+const removeTaskFailedListener = synk.onLeaderTaskFailed((event) => console.error(event));
+const removeTaskSkippedListener = synk.onLeaderTaskSkipped((event) => console.warn(event));
+const removeLeaderStatusChangedListener = synk.onLeaderStatusChanged((event) =>
+    console.log(event.leaderTabId)
+);
 ```
 
 ## Maintenance APIs
