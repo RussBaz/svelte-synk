@@ -10,7 +10,7 @@ Svelte tab data synchronisation with leader election for Svelte 5 SPAs:
 
 It makes it trivial to call token refresh endpoints or poll a remote API without flooding it with a separate call from every tab.
 
-**[Demo](https://your-demo-url)** · **[npm](https://www.npmjs.com/package/svelte-synk)** _(replace when ready)_
+**[Demo](https://russbaz.github.io/svelte-synk/)**
 
 ## Table of Contents
 
