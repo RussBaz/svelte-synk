@@ -42,19 +42,17 @@ Please wrap the root of your app with the provided helper component.
 <!-- +layout.svelte -->
 
 <script lang="ts">
-    import type { Snippet } from 'svelte';
     import { browser } from '$app/environment';
 
-    import SynkProvider from 'svelte-synk';
-    import { setIsBrowserOverrideTo } from 'svelte-synk';
+    import { SynkProvider, setIsBrowserOverrideTo } from 'svelte-synk';
 
     setIsBrowserOverrideTo(browser); // forces the internal isBrowser() utility to always match the browser variable
 
-    let { children } = $props<{ children?: Snippet }>();
+    let { children } = $props();
 </script>
 
 <SynkProvider>
-    {@render children?.()}
+    {@render children()}
 </SynkProvider>
 ```
 
@@ -71,11 +69,32 @@ Please wrap the root of your app with the provided helper component.
     // to use as a rune
     // equivalent to calling fromStore(synk.createStore('counter', 0))
     const counter = synk.createStore('counter', 0).value;
+
+    // brief example of scheduling a task on the leader tab
+
+    // I recommend saving task names into variables
+    // this helps preventing typos when you try running the task
+    const alertTN = 'alert'; // task name
+
+    // the key prevents duplication for given task
+    // if another task with the same name uses exactly the same key
+    // a new task with this key will be rejected as a duplicate
+    const alertTK = 'alert'; // task key
+
+    synk.registerLeaderTask(alertTN, ({ payload }) => {
+        alert(payload ?? 'hello world!');
+    });
+
+    const runAlert = async () => {
+        // passing the contents of the 'text' store as a payload to the task
+        await synk.runLeaderTask(alertTN, alertTK, $text);
+    };
 </script>
 
 <button onclick={() => (counter.current += 1)}>
     Count: {counter.current}
 </button>
+<button onclick={runAlert}>alert the leader tab</button>
 <p>{$text}</p>
 ```
 
