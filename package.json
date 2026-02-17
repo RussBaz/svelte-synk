@@ -1,6 +1,7 @@
 {
     "name": "svelte-synk",
-    "version": "0.1.1",
+    "version": "0.1.2",
+    "description": "Svelte 5 cross-tab sync, leader election and task rollover on leader change (when leader tab is closed)",
     "scripts": {
         "dev": "vite dev",
         "build": "vite build && npm run prepack",
@@ -61,5 +62,17 @@
         "persistence",
         "spa"
     ],
-    "license": "MIT"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RussBaz/svelte-synk"
+    },
+    "homepage": "https://github.com/RussBaz/svelte-synk#readme",
+    "bugs": {
+        "url": "https://github.com/RussBaz/svelte-synk/issues"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "RussBaz",
+        "url": "https://github.com/RussBaz"
+    }
 }
